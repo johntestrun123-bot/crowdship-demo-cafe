@@ -22,6 +22,11 @@ export const MENU: MenuItem[] = [
   { id: "brownie", name: "Almond brownie", description: "Fudgy and flourless", price: 425, category: "bakery", emoji: "🍫", tags: ["gluten-free"] },
 ];
 
+/** Items that carry every selected dietary tag (no tags selected: everything). */
+export function filterByTags(items: MenuItem[], tags: Tag[]): MenuItem[] {
+  return items.filter((m) => tags.every((t) => m.tags.includes(t)));
+}
+
 export const TAX_RATE = 0.08;
 
 export interface CartLine {

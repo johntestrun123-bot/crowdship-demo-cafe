@@ -32,6 +32,12 @@ button { font: inherit; cursor: pointer; }
 .tab { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px; padding: 8px 16px; white-space: nowrap; }
 .tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
 
+.diet { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+@media (min-width: 900px) { .diet { grid-column: 1; } }
+.chip { border: 1px dashed var(--line); background: transparent; color: var(--muted); border-radius: 999px; padding: 6px 12px; font-size: 13px; }
+.chip.on { border-style: solid; border-color: #2f7d4f; background: #e6f4ea; color: #1e5b36; font-weight: 600; }
+.diet-count { font-size: 13px; color: var(--muted); }
+
 .menu { display: grid; gap: 10px; }
 @media (min-width: 640px) { .menu { grid-template-columns: 1fr 1fr; } }
 .item { display: grid; grid-template-columns: 52px 1fr auto; gap: 12px; align-items: center; background: var(--card); border: 1px solid var(--line); border-radius: 18px; padding: 12px; }
