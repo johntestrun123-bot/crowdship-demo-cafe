@@ -1,6 +1,6 @@
 import { useState } from "react";
 import {
-  addItem, decrementItem, EMPTY_CART, formatPrice, itemCount, MENU, removeLine, totals, type Cart, type Category,
+  addItem, decrementItem, EMPTY_CART, filterByTags, formatPrice, itemCount, MENU, removeLine, totals, type Cart, type Category, type Tag,
 } from "./menu";
 
 const CATEGORIES: { id: Category | "all"; label: string }[] = [
@@ -15,8 +15,10 @@ const TAG_LABEL = { vegan: "🌱 Vegan", "gluten-free": "🌾 Gluten-free" } as 
 export default function App() {
   const [cart, setCart] = useState<Cart>(EMPTY_CART);
   const [category, setCategory] = useState<Category | "all">("all");
+  const [diet, setDiet] = useState<Tag[]>([]);
   const [order, setOrder] = useState<string | null>(null);
-  const items = MENU.filter((m) => category === "all" || m.category === category);
+  const items = filterByTags(MENU.filter((m) => category === "all" || m.category === category), diet);
+  const toggleDiet = (t: Tag) => setDiet((d) => (d.includes(t) ? d.filter((x) => x !== t) : [...d, t]));
   const count = itemCount(cart);
   const t = totals(cart);
 
@@ -41,7 +43,17 @@ export default function App() {
         ))}
       </nav>
 
+      <div className="diet" role="group" aria-label="Dietary filters">
+        {(Object.keys(TAG_LABEL) as Tag[]).map((t) => (
+          <button key={t} className={diet.includes(t) ? "chip on" : "chip"} aria-pressed={diet.includes(t)} onClick={() => toggleDiet(t)} data-testid={`filter-${t}`}>
+            {TAG_LABEL[t]}
+          </button>
+        ))}
+        {diet.length > 0 && <span className="diet-count" data-testid="filter-count">{items.length} {items.length === 1 ? "match" : "matches"}</span>}
+      </div>
+
       <main className="menu" data-testid="menu">
+        {items.length === 0 && <p className="empty" data-testid="no-matches">Nothing matches those filters yet.</p>}
         {items.map((m) => (
           <article key={m.id} className="item" data-testid={`menu-item-${m.id}`}>
             <span className="emoji" aria-hidden>{m.emoji}</span>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { addItem, decrementItem, EMPTY_CART, formatPrice, itemCount, priceOf, totals } from "./menu";
+import { addItem, decrementItem, EMPTY_CART, filterByTags, formatPrice, itemCount, MENU, priceOf, totals } from "./menu";
 
 describe("cart", () => {
   it("adds items and keeps a running subtotal", () => {
@@ -24,5 +24,13 @@ describe("cart", () => {
     const t = totals(addItem(EMPTY_CART, "oat-latte"));
     expect(t).toEqual({ subtotal: 500, tax: 40, total: 540 });
     expect(formatPrice(t.total)).toBe("$5.40");
+  });
+});
+
+describe("dietary filters", () => {
+  it("keeps only items with every selected tag", () => {
+    expect(filterByTags(MENU, [])).toHaveLength(MENU.length);
+    expect(filterByTags(MENU, ["vegan"]).map((m) => m.id)).toEqual(["oat-latte", "cold-brew", "chai", "banana-bread"]);
+    expect(filterByTags(MENU, ["vegan", "gluten-free"]).map((m) => m.id)).toEqual(["oat-latte", "cold-brew", "chai"]);
   });
 });

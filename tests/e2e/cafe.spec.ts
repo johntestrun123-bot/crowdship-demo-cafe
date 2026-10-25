@@ -25,3 +25,19 @@ test("browse the menu, build an order, and check out", async ({ page }) => {
   await expect(page.getByTestId("order-confirmation")).toContainText("placed");
   await expect(page.getByTestId("cart-count")).toHaveText("0 items");
 });
+
+test("dietary filters narrow the menu and combine", async ({ page }) => {
+  await page.goto("/");
+  await page.getByTestId("filter-vegan").click();
+  await expect(page.getByTestId("filter-vegan")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.getByTestId("menu-item-croissant")).toHaveCount(0);
+  await expect(page.getByTestId("menu-item-banana-bread")).toBeVisible();
+  await page.getByTestId("filter-gluten-free").click();
+  await expect(page.getByTestId("filter-count")).toHaveText("3 matches");
+  await expect(page.getByTestId("menu-item-banana-bread")).toHaveCount(0);
+  await page.getByTestId("category-bakery").click();
+  await expect(page.getByTestId("no-matches")).toBeVisible();
+  await page.getByTestId("filter-vegan").click();
+  await page.getByTestId("filter-gluten-free").click();
+  await expect(page.getByTestId("menu-item-croissant")).toBeVisible();
+});
